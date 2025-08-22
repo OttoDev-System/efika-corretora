@@ -1,14 +1,31 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import Header from '@/components/landing/Header'
+import HeroSection from '@/components/landing/HeroSection'
+import DiferenciaisSection from '@/components/landing/DiferenciaisSection'
+import PlanosSaudeSection from '@/components/landing/PlanosSaudeSection'
+import PessoaJuridicaSection from '@/components/landing/PessoaJuridicaSection'
+import PessoaFisicaSection from '@/components/landing/PessoaFisicaSection'
+import CredibilidadeSection from '@/components/landing/CredibilidadeSection'
+import Footer from '@/components/landing/Footer'
+import ChatBot from '@/components/landing/ChatBot'
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen">
+      <Header />
+      <main>
+        <HeroSection />
+        <DiferenciaisSection />
+        <PlanosSaudeSection />
+        <PessoaJuridicaSection />
+        <PessoaFisicaSection />
+        <CredibilidadeSection />
+      </main>
+      <Footer />
+      <ChatBot />
     </div>
-  );
-};
+  )
+}
+
+export default Index
 
 export default Index;

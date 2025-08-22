@@ -18,7 +18,19 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'inter': ['Inter', 'sans-serif'],
+			},
 			colors: {
+				/* Efika Brand Colors */
+				efika: {
+					navy: 'hsl(var(--efika-navy))',
+					'navy-light': 'hsl(var(--efika-navy-light))',
+					'navy-dark': 'hsl(var(--efika-navy-dark))',
+					silver: 'hsl(var(--efika-silver))',
+					'silver-light': 'hsl(var(--efika-silver-light))',
+					'silver-dark': 'hsl(var(--efika-silver-dark))',
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
