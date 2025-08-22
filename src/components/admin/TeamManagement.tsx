@@ -87,22 +87,25 @@ const TeamManagement: React.FC = () => {
 
       if (inviteError) throw inviteError;
 
-      // Send invitation email
-      const { error: emailError } = await supabase.functions.invoke('send-invite-email', {
-        body: {
-          email: data.email,
-          name: data.name,
-          role: data.role,
-          token
-        }
-      });
-
-      if (emailError) throw emailError;
-
-      toast({
-        title: 'Convite enviado!',
-        description: `Convite enviado para ${data.email} com sucesso.`
-      });
+      // Generate the invitation link
+      const inviteUrl = `${window.location.origin}/auth/first-access?token=${token}`;
+      
+      // Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(inviteUrl);
+        toast({
+          title: 'Convite criado!',
+          description: `Link copiado para área de transferência. Compartilhe com ${data.name}: ${data.email}`,
+          duration: 6000
+        });
+      } catch (err) {
+        // Fallback for older browsers
+        toast({
+          title: 'Convite criado!',
+          description: `Copie este link e compartilhe: ${inviteUrl}`,
+          duration: 8000
+        });
+      }
 
       reset();
       await loadTeam();
@@ -230,7 +233,7 @@ const TeamManagement: React.FC = () => {
               loading={inviting}
               className="bg-efika-navy hover:bg-efika-navy-dark"
             >
-              Enviar Convite
+              Gerar Convite
             </LoadingButton>
           </form>
         </CardContent>
