@@ -49,12 +49,12 @@ const FirstAccessPage: React.FC = () => {
       }
 
       try {
-        // Using RPC call with type casting
-        const { data, error } = await (supabase as any).rpc('get_invitation_by_token', {
+        // Using RPC call
+        const { data, error } = await supabase.rpc('get_invitation_by_token', {
           p_token: token
         });
 
-        if (error || !data || data.length === 0) {
+        if (error || !data || !Array.isArray(data) || data.length === 0) {
           toast({
             variant: 'destructive',
             title: 'Convite inválido',
@@ -96,7 +96,7 @@ const FirstAccessPage: React.FC = () => {
       }
 
       // Mark invitation as used
-      await (supabase as any).rpc('mark_invitation_used', {
+      await supabase.rpc('mark_invitation_used', {
         p_invitation_id: invitation.id
       });
 

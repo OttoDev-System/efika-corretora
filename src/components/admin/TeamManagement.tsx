@@ -17,7 +17,9 @@ import type { Profile } from '@/types/auth';
 const inviteSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
   email: z.string().email('Email inválido'),
-  role: z.string().min(1, 'Selecione um cargo'),
+  role: z.enum(['corretor', 'suporte'], { 
+    message: 'Selecione um cargo válido' 
+  }),
   permissions: z.array(z.string()).optional()
 });
 
@@ -73,11 +75,11 @@ const TeamManagement: React.FC = () => {
       // Generate a temporary token
       const token = crypto.randomUUID();
       
-      // Call the RPC function using proper type casting
-      const { error: inviteError } = await (supabase as any).rpc('create_user_invitation', {
+      // Call the RPC function
+      const { error: inviteError } = await supabase.rpc('create_user_invitation', {
         p_email: data.email,
         p_name: data.name,
-        p_role: data.role,
+        p_role: data.role as 'admin' | 'corretor' | 'suporte',
         p_permissions: data.permissions || [],
         p_token: token,
         p_expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
@@ -209,7 +211,7 @@ const TeamManagement: React.FC = () => {
 
             <div>
               <Label htmlFor="role">Cargo</Label>
-                <Select onValueChange={(value) => setValue('role', value)}>
+                <Select onValueChange={(value) => setValue('role', value as 'corretor' | 'suporte')}>
                   <SelectTrigger className={errors.role ? 'border-destructive' : ''}>
                     <SelectValue placeholder="Selecione o cargo" />
                   </SelectTrigger>
