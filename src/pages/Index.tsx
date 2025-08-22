@@ -2,6 +2,7 @@ import Header from '@/components/landing/Header'
 import HeroSection from '@/components/landing/HeroSection'
 import DiferenciaisSection from '@/components/landing/DiferenciaisSection'
 import PlanosSaudeSection from '@/components/landing/PlanosSaudeSection'
+import PessoaJuridicaSection from '@/components/landing/PessoaJuridicaSection'
 
 const Index = () => {
   return (
@@ -10,11 +11,12 @@ const Index = () => {
       <HeroSection />
       <DiferenciaisSection />
       <PlanosSaudeSection />
-      <div className="bg-green-100 py-20 text-center">
+      <PessoaJuridicaSection />
+      <div className="bg-purple-100 py-20 text-center">
         <h2 className="text-2xl font-bold text-gray-900">
-          🎉 LOOP INFINITO CORRIGIDO! ✅
+          ✅ Header + HeroSection + DiferenciaisSection + PlanosSaudeSection + PessoaJuridicaSection
         </h2>
-        <p className="text-gray-600">PlanosSaudeSection está funcionando perfeitamente!</p>
+        <p className="text-gray-600">Testando PessoaJuridicaSection...</p>
       </div>
     </div>
   )
