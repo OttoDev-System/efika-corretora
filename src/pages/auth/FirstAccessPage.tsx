@@ -49,15 +49,12 @@ const FirstAccessPage: React.FC = () => {
       }
 
       try {
-        const { data, error } = await supabase
-          .from('user_invitations')
-          .select('*')
-          .eq('token', token)
-          .eq('used', false)
-          .gt('expires_at', new Date().toISOString())
-          .single();
+        // Using RPC call since table isn't in types yet
+        const { data, error } = await supabase.rpc('get_invitation_by_token', {
+          p_token: token
+        });
 
-        if (error || !data) {
+        if (error || !data || data.length === 0) {
           toast({
             variant: 'destructive',
             title: 'Convite inválido',
@@ -67,7 +64,7 @@ const FirstAccessPage: React.FC = () => {
           return;
         }
 
-        setInvitation(data);
+        setInvitation(data[0]);
       } catch (error) {
         console.error('Error loading invitation:', error);
         navigate('/login');
@@ -99,10 +96,9 @@ const FirstAccessPage: React.FC = () => {
       }
 
       // Mark invitation as used
-      await supabase
-        .from('user_invitations')
-        .update({ used: true, used_at: new Date().toISOString() })
-        .eq('id', invitation.id);
+      await supabase.rpc('mark_invitation_used', {
+        p_invitation_id: invitation.id
+      });
 
       toast({
         title: 'Conta criada com sucesso!',

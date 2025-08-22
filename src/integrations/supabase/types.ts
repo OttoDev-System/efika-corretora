@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          active: boolean | null
           avatar: string | null
           created_at: string | null
           email: string
@@ -29,6 +30,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          active?: boolean | null
           avatar?: string | null
           created_at?: string | null
           email: string
@@ -42,6 +44,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          active?: boolean | null
           avatar?: string | null
           created_at?: string | null
           email?: string
@@ -53,6 +56,51 @@ export type Database = {
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_invitations: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          email: string
+          expires_at: string
+          id: string
+          name: string
+          permissions: string[] | null
+          role: Database["public"]["Enums"]["user_role"]
+          token: string
+          updated_at: string | null
+          used: boolean | null
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          email: string
+          expires_at: string
+          id?: string
+          name: string
+          permissions?: string[] | null
+          role: Database["public"]["Enums"]["user_role"]
+          token: string
+          updated_at?: string | null
+          used?: boolean | null
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          name?: string
+          permissions?: string[] | null
+          role?: Database["public"]["Enums"]["user_role"]
+          token?: string
+          updated_at?: string | null
+          used?: boolean | null
+          used_at?: string | null
         }
         Relationships: []
       }

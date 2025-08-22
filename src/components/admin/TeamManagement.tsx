@@ -18,7 +18,7 @@ const inviteSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
   email: z.string().email('Email inválido'),
   role: z.enum(['corretor', 'suporte'], {
-    required_error: 'Selecione um cargo'
+    errorMap: () => ({ message: 'Selecione um cargo' })
   }),
   permissions: z.array(z.string()).optional()
 });
@@ -75,18 +75,15 @@ const TeamManagement: React.FC = () => {
       // Generate a temporary token
       const token = crypto.randomUUID();
       
-      // Create user invitation record
-      const { error: inviteError } = await supabase
-        .from('user_invitations')
-        .insert({
-          email: data.email,
-          name: data.name,
-          role: data.role,
-          permissions: data.permissions || [],
-          token,
-          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
-          created_by: (await supabase.auth.getUser()).data.user?.id
-        });
+      // Use Supabase client directly with RPC call since table isn't in types yet
+      const { error: inviteError } = await supabase.rpc('create_user_invitation', {
+        p_email: data.email,
+        p_name: data.name,
+        p_role: data.role,
+        p_permissions: data.permissions || [],
+        p_token: token,
+        p_expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      });
 
       if (inviteError) throw inviteError;
 
@@ -124,7 +121,7 @@ const TeamManagement: React.FC = () => {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ active: !currentlyActive })
+        .update({ first_login: currentlyActive }) // Using first_login as active flag
         .eq('user_id', userId);
 
       if (error) throw error;
