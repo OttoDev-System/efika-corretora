@@ -23,13 +23,22 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
   type = 'button',
   className,
 }) => {
+  console.log("🔘 LoadingButton renderizado - type:", type, "disabled:", disabled || loading);
+  
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("🖱️ LoadingButton clicado - type:", type);
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
     <Button
       type={type}
       variant={variant}
       size={size}
       disabled={disabled || loading}
-      onClick={onClick}
+      onClick={handleClick}
       className={className}
     >
       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

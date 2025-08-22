@@ -12,9 +12,13 @@ import { useToast } from '@/hooks/use-toast';
 import { loginSchema, type LoginFormData } from '@/lib/validations';
 
 const LoginPage: React.FC = () => {
+  console.log("📄 LoginPage renderizado");
+  
   const { login, isLoading, error, clearError, isAuthenticated, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  
+  console.log("🔧 Estados: isLoading:", isLoading, "isAuthenticated:", isAuthenticated, "user:", user);
   
   const {
     register,
@@ -23,6 +27,8 @@ const LoginPage: React.FC = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema)
   });
+
+  console.log("📝 Formulário configurado - erros:", errors);
 
   // Efeito para redirecionar o usuário após o login ser bem-sucedido
   useEffect(() => {
