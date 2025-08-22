@@ -13,10 +13,10 @@ const TEST_USERS: Record<string, User> = {
     permissions: ['*'],
     firstLogin: false
   },
-  'maria@efika.com.br': {
+  'corretor@efika.com.br': {
     id: '22222222-2222-2222-2222-222222222222',
-    email: 'maria@efika.com.br',
-    name: 'Maria Silva',
+    email: 'corretor@efika.com.br',
+    name: 'Corretor de Seguros',
     role: 'corretor',
     permissions: ['leads:read', 'leads:write', 'clients:read', 'clients:write'],
     firstLogin: false
@@ -33,9 +33,9 @@ const TEST_USERS: Record<string, User> = {
 
 // Test passwords
 const TEST_PASSWORDS: Record<string, string> = {
-  'admin@efika.com.br': 'admin123',
-  'maria@efika.com.br': 'maria123',
-  'suporte@efika.com.br': 'suporte123'
+  'admin@efika.com.br': '123456',
+  'corretor@efika.com.br': '123456',
+  'suporte@efika.com.br': '123456'
 };
 
 const mapProfileToUser = (profile: Profile): User => ({

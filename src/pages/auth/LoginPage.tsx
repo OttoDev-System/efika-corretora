@@ -24,9 +24,14 @@ const LoginPage: React.FC = () => {
     resolver: zodResolver(loginSchema)
   });
 
+  // Efeito para redirecionar o usuário após o login ser bem-sucedido
   useEffect(() => {
     if (isAuthenticated && user) {
-      // Redirect based on user role
+      toast({
+        title: 'Login bem-sucedido!',
+        description: 'Redirecionando para o seu painel...',
+      });
+
       const redirectPath = {
         admin: '/admin/dashboard',
         corretor: '/corretor/pipeline',
@@ -35,33 +40,28 @@ const LoginPage: React.FC = () => {
       
       navigate(redirectPath, { replace: true });
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, user, navigate, toast]);
 
+  // Efeito para exibir toasts de erro
   useEffect(() => {
     if (error) {
       toast({
         variant: 'destructive',
         title: 'Erro ao fazer login',
-        description: error,
+        description: 'Credenciais inválidas. Por favor, tente novamente.',
       });
-      clearError();
+      clearError(); // Limpa o erro para não mostrar novamente
     }
   }, [error, toast, clearError]);
 
+  // Função chamada ao submeter o formulário
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data);
-      toast({
-        title: 'Login realizado com sucesso!',
-        description: 'Redirecionando...',
-      });
-      
-      // Small delay to ensure toast is visible before redirect
-      setTimeout(() => {
-        // Redirection will be handled by the useEffect
-      }, 500);
-    } catch (error) {
-      // Error is handled by the useEffect above
+      // A lógica de sucesso é tratada pelo useEffect acima
+    } catch (err) {
+      // A lógica de erro também é tratada pelo useEffect
+      console.error("Falha no login:", err);
     }
   };
 
@@ -90,7 +90,7 @@ const LoginPage: React.FC = () => {
               <Input
                 id="email"
                 type="text"
-                placeholder="seuemail@exemplo.com ou 000.000.000-00"
+                placeholder="seuemail@exemplo.com"
                 {...register('email')}
                 className={errors.email ? 'border-destructive' : ''}
               />
@@ -117,14 +117,14 @@ const LoginPage: React.FC = () => {
               )}
             </div>
 
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="rememberMe"
-                {...register('rememberMe')}
-              />
-              <Label htmlFor="rememberMe" className="text-sm">
-                Lembrar-me por 30 dias
-              </Label>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                    <Checkbox id="rememberMe" {...register('rememberMe')} />
+                    <Label htmlFor="rememberMe" className="text-sm font-normal">Lembrar-me</Label>
+                </div>
+                <Link to="/auth/forgot-password" className="text-sm text-efika-navy hover:underline">
+                    Esqueci minha senha
+                </Link>
             </div>
 
             <LoadingButton
@@ -135,24 +135,15 @@ const LoginPage: React.FC = () => {
               ENTRAR
             </LoadingButton>
           </form>
-
-          <div className="mt-6 text-center space-y-2">
-            <Link
-              to="/auth/forgot-password"
-              className="text-efika-navy hover:underline text-sm block"
-            >
-              Esqueci minha senha
-            </Link>
-          </div>
         </div>
 
         {/* Test Users Info */}
         <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-lg p-4 text-white text-sm">
-          <h4 className="font-semibold mb-2">Usuários de teste:</h4>
+          <h4 className="font-semibold mb-2">Usuários de teste (senha: 123456):</h4>
           <div className="space-y-1">
-            <p><strong>Admin:</strong> admin@efika.com.br / admin123</p>
-            <p><strong>Corretor:</strong> maria@efika.com.br / maria123</p>
-            <p><strong>Suporte:</strong> suporte@efika.com.br / suporte123</p>
+            <p><strong>Admin:</strong> admin@efika.com.br</p>
+            <p><strong>Corretor:</strong> corretor@efika.com.br</p>
+            <p><strong>Suporte:</strong> suporte@efika.com.br</p>
           </div>
         </div>
       </div>
