@@ -4,6 +4,7 @@ import DiferenciaisSection from '@/components/landing/DiferenciaisSection'
 import PlanosSaudeSection from '@/components/landing/PlanosSaudeSection'
 import PessoaJuridicaSection from '@/components/landing/PessoaJuridicaSection'
 import PessoaFisicaSection from '@/components/landing/PessoaFisicaSection'
+import CredibilidadeSection from '@/components/landing/CredibilidadeSection'
 
 const Index = () => {
   return (
@@ -14,11 +15,12 @@ const Index = () => {
       <PlanosSaudeSection />
       <PessoaJuridicaSection />
       <PessoaFisicaSection />
-      <div className="bg-orange-100 py-20 text-center">
+      <CredibilidadeSection />
+      <div className="bg-pink-100 py-20 text-center">
         <h2 className="text-2xl font-bold text-gray-900">
-          🚀 QUASE COMPLETO! 5 seções funcionando ✅
+          🔥 QUASE LÁ! 6 seções funcionando ✅
         </h2>
-        <p className="text-gray-600">Testando PessoaFisicaSection...</p>
+        <p className="text-gray-600">Testando CredibilidadeSection (depoimentos + logos)...</p>
       </div>
     </div>
   )
