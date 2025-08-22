@@ -17,9 +17,7 @@ import type { Profile } from '@/types/auth';
 const inviteSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
   email: z.string().email('Email inválido'),
-  role: z.enum(['corretor', 'suporte'], {
-    errorMap: () => ({ message: 'Selecione um cargo' })
-  }),
+  role: z.string().min(1, 'Selecione um cargo'),
   permissions: z.array(z.string()).optional()
 });
 
@@ -75,8 +73,8 @@ const TeamManagement: React.FC = () => {
       // Generate a temporary token
       const token = crypto.randomUUID();
       
-      // Use Supabase client directly with RPC call since table isn't in types yet
-      const { error: inviteError } = await supabase.rpc('create_user_invitation', {
+      // Call the RPC function using proper type casting
+      const { error: inviteError } = await (supabase as any).rpc('create_user_invitation', {
         p_email: data.email,
         p_name: data.name,
         p_role: data.role,
@@ -105,6 +103,7 @@ const TeamManagement: React.FC = () => {
       });
 
       reset();
+      await loadTeam();
     } catch (error) {
       console.error('Error sending invite:', error);
       toast({
@@ -210,15 +209,15 @@ const TeamManagement: React.FC = () => {
 
             <div>
               <Label htmlFor="role">Cargo</Label>
-              <Select onValueChange={(value) => setValue('role', value as any)}>
-                <SelectTrigger className={errors.role ? 'border-destructive' : ''}>
-                  <SelectValue placeholder="Selecione o cargo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="corretor">Corretor</SelectItem>
-                  <SelectItem value="suporte">Suporte</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select onValueChange={(value) => setValue('role', value)}>
+                  <SelectTrigger className={errors.role ? 'border-destructive' : ''}>
+                    <SelectValue placeholder="Selecione o cargo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="corretor">Corretor</SelectItem>
+                    <SelectItem value="suporte">Suporte</SelectItem>
+                  </SelectContent>
+                </Select>
               {errors.role && (
                 <p className="text-destructive text-sm mt-1">{errors.role.message}</p>
               )}

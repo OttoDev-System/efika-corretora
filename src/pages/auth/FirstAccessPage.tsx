@@ -49,8 +49,8 @@ const FirstAccessPage: React.FC = () => {
       }
 
       try {
-        // Using RPC call since table isn't in types yet
-        const { data, error } = await supabase.rpc('get_invitation_by_token', {
+        // Using RPC call with type casting
+        const { data, error } = await (supabase as any).rpc('get_invitation_by_token', {
           p_token: token
         });
 
@@ -96,7 +96,7 @@ const FirstAccessPage: React.FC = () => {
       }
 
       // Mark invitation as used
-      await supabase.rpc('mark_invitation_used', {
+      await (supabase as any).rpc('mark_invitation_used', {
         p_invitation_id: invitation.id
       });
 

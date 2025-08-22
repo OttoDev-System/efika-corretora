@@ -109,7 +109,35 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_user_invitation: {
+        Args: {
+          p_email: string
+          p_expires_at: string
+          p_name: string
+          p_permissions: string[]
+          p_role: Database["public"]["Enums"]["user_role"]
+          p_token: string
+        }
+        Returns: undefined
+      }
+      get_invitation_by_token: {
+        Args: { p_token: string }
+        Returns: {
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          name: string
+          permissions: string[]
+          role: Database["public"]["Enums"]["user_role"]
+          token: string
+          used: boolean
+        }[]
+      }
+      mark_invitation_used: {
+        Args: { p_invitation_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       user_role: "admin" | "corretor" | "suporte"
