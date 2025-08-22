@@ -1,18 +1,16 @@
 import Header from '@/components/landing/Header'
+import HeroSection from '@/components/landing/HeroSection'
 
 const Index = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="pt-20 flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Efika Corretora - Teste de Componentes
-          </h1>
-          <p className="text-xl text-gray-600">
-            Carregando Header... ✅
-          </p>
-        </div>
+      <HeroSection />
+      <div className="bg-gray-100 py-20 text-center">
+        <h2 className="text-2xl font-bold text-gray-900">
+          Teste: Header ✅ + HeroSection ✅
+        </h2>
+        <p className="text-gray-600">Se aparecer esta mensagem, HeroSection está OK</p>
       </div>
     </div>
   )
