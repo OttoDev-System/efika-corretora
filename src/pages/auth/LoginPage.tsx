@@ -138,12 +138,6 @@ const LoginPage: React.FC = () => {
             >
               Esqueci minha senha
             </Link>
-            <Link
-              to="/auth/first-access"
-              className="text-efika-silver-dark hover:underline text-sm block"
-            >
-              Primeiro acesso? Clique aqui
-            </Link>
           </div>
         </div>
 

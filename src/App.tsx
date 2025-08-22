@@ -9,6 +9,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/auth/LoginPage";
+import FirstAccessPage from "./pages/auth/FirstAccessPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import PipelinePage from "./pages/corretor/PipelinePage";
 import TicketsPage from "./pages/suporte/TicketsPage";
@@ -31,6 +32,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/auth/first-access" element={<FirstAccessPage />} />
             
             {/* Protected Admin Routes */}
             <Route 
