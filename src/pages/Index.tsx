@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import Header from '@/components/landing/Header'
 import HeroSection from '@/components/landing/HeroSection'
 import DiferenciaisSection from '@/components/landing/DiferenciaisSection'
@@ -12,6 +14,19 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <Header />
+      
+      {/* Sistema Login Button */}
+      <div className="fixed top-4 right-4 z-50">
+        <Link to="/login">
+          <Button 
+            variant="outline" 
+            className="bg-white/90 backdrop-blur-sm border-efika-navy text-efika-navy hover:bg-efika-navy hover:text-white shadow-lg"
+          >
+            Sistema Login
+          </Button>
+        </Link>
+      </div>
+      
       <main>
         <HeroSection />
         <DiferenciaisSection />
