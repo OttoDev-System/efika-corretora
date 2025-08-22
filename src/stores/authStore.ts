@@ -60,12 +60,19 @@ export const useAuthStore = create<AuthStore>()(
 
       // Actions
       login: async (credentials: LoginForm) => {
+        console.log("🔐 AuthStore login chamado com:", credentials);
         set({ isLoading: true, error: null });
         
         try {
           // Check if it's a test user first
+          console.log("🔍 Verificando usuários de teste disponíveis:", Object.keys(TEST_USERS));
           const testUser = TEST_USERS[credentials.email];
+          console.log("👤 Usuário de teste encontrado:", testUser);
+          console.log("🔑 Senha fornecida:", credentials.password);
+          console.log("🔑 Senha esperada:", TEST_PASSWORDS[credentials.email]);
+          
           if (testUser && TEST_PASSWORDS[credentials.email] === credentials.password) {
+            console.log("✅ Login de usuário de teste bem-sucedido");
             // Test user login
             set({ 
               user: testUser, 
@@ -74,6 +81,8 @@ export const useAuthStore = create<AuthStore>()(
               error: null 
             });
             return;
+          } else {
+            console.log("❌ Credenciais de teste não conferem");
           }
 
           // Regular Supabase authentication

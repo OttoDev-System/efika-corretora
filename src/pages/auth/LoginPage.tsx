@@ -56,12 +56,15 @@ const LoginPage: React.FC = () => {
 
   // Função chamada ao submeter o formulário
   const onSubmit = async (data: LoginFormData) => {
+    console.log("🚀 onSubmit chamado com dados:", data);
     try {
+      console.log("📞 Chamando função login...");
       await login(data);
+      console.log("✅ Login realizado com sucesso");
       // A lógica de sucesso é tratada pelo useEffect acima
     } catch (err) {
+      console.error("❌ Falha no login:", err);
       // A lógica de erro também é tratada pelo useEffect
-      console.error("Falha no login:", err);
     }
   };
 
