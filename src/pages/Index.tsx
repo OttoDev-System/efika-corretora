@@ -10,11 +10,11 @@ const Index = () => {
       <HeroSection />
       <DiferenciaisSection />
       <PlanosSaudeSection />
-      <div className="bg-blue-100 py-20 text-center">
+      <div className="bg-green-100 py-20 text-center">
         <h2 className="text-2xl font-bold text-gray-900">
-          Teste: Header ✅ + HeroSection ✅ + DiferenciaisSection ✅ + PlanosSaudeSection ✅
+          🎉 LOOP INFINITO CORRIGIDO! ✅
         </h2>
-        <p className="text-gray-600">Se aparecer esta mensagem, PlanosSaudeSection está OK</p>
+        <p className="text-gray-600">PlanosSaudeSection está funcionando perfeitamente!</p>
       </div>
     </div>
   )

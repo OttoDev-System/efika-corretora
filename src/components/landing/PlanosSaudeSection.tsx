@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -47,13 +47,10 @@ const PlanosSaudeSection = () => {
     'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins'
   ]
 
-  const calcularEstimativa = () => {
+  // ✅ FIX: Cálculo memoizado sem toast para evitar loop
+  const valorEstimado = useMemo(() => {
+    // Só calcula se todos os campos estão preenchidos
     if (!calculadoraData.idade || !calculadoraData.dependentes || !calculadoraData.estado) {
-      toast({
-        variant: "destructive",
-        title: "Campos obrigatórios",
-        description: "Preencha todos os campos para calcular."
-      })
       return null
     }
 
@@ -77,25 +74,32 @@ const PlanosSaudeSection = () => {
     else if (calculadoraData.tipoPlano === 'coletivo-empresarial') valorBase *= 0.75
 
     return Math.round(valorBase)
-  }
+  }, [calculadoraData])
 
-  const handleSimular = () => {
-    const estimativa = calcularEstimativa()
-    if (estimativa) {
+  // ✅ FIX: HandleSimular com useCallback
+  const handleSimular = useCallback(() => {
+    if (!calculadoraData.idade || !calculadoraData.dependentes || !calculadoraData.estado) {
+      toast({
+        variant: "destructive",
+        title: "Campos obrigatórios",
+        description: "Preencha todos os campos para calcular."
+      })
+      return
+    }
+
+    if (valorEstimado) {
       toast({
         title: "Simulação realizada!",
-        description: `Encontramos planos a partir de R$ ${estimativa}/mês para você.`
+        description: `Encontramos planos a partir de R$ ${valorEstimado}/mês para você.`
       })
       
       console.log('Simulação Plano Saúde:', {
         ...calculadoraData,
-        estimativa,
+        estimativa: valorEstimado,
         timestamp: new Date().toISOString()
       })
     }
-  }
-
-  const valorEstimado = calcularEstimativa()
+  }, [calculadoraData, valorEstimado, toast])
 
   return (
     <section id="planos" className="hero-gradient py-20 md:py-32">
