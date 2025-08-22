@@ -1,27 +1,16 @@
-import Header from '@/components/landing/Header'
-import HeroSection from '@/components/landing/HeroSection'
-import DiferenciaisSection from '@/components/landing/DiferenciaisSection'
-import PlanosSaudeSection from '@/components/landing/PlanosSaudeSection'
-import PessoaJuridicaSection from '@/components/landing/PessoaJuridicaSection'
-import PessoaFisicaSection from '@/components/landing/PessoaFisicaSection'
-import CredibilidadeSection from '@/components/landing/CredibilidadeSection'
-import Footer from '@/components/landing/Footer'
-import ChatBot from '@/components/landing/ChatBot'
-
 const Index = () => {
   return (
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <HeroSection />
-        <DiferenciaisSection />
-        <PlanosSaudeSection />
-        <PessoaJuridicaSection />
-        <PessoaFisicaSection />
-        <CredibilidadeSection />
-      </main>
-      <Footer />
-      <ChatBot />
+    <div className="min-h-screen bg-white">
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Efika Corretora - Landing Page
+          </h1>
+          <p className="text-xl text-gray-600">
+            Loading components...
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
