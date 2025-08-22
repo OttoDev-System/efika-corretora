@@ -3,6 +3,41 @@ import { persist } from 'zustand/middleware';
 import { supabase } from '@/integrations/supabase/client';
 import type { AuthStore, User, LoginForm, Profile } from '@/types/auth';
 
+// Test users for development/testing
+const TEST_USERS: Record<string, User> = {
+  'admin@efika.com.br': {
+    id: '11111111-1111-1111-1111-111111111111',
+    email: 'admin@efika.com.br',
+    name: 'Administrador Sistema',
+    role: 'admin',
+    permissions: ['*'],
+    firstLogin: false
+  },
+  'maria@efika.com.br': {
+    id: '22222222-2222-2222-2222-222222222222',
+    email: 'maria@efika.com.br',
+    name: 'Maria Silva',
+    role: 'corretor',
+    permissions: ['leads:read', 'leads:write', 'clients:read', 'clients:write'],
+    firstLogin: false
+  },
+  'suporte@efika.com.br': {
+    id: '33333333-3333-3333-3333-333333333333',
+    email: 'suporte@efika.com.br',
+    name: 'Suporte Técnico',
+    role: 'suporte',
+    permissions: ['tickets:read', 'tickets:write', 'clients:read'],
+    firstLogin: false
+  }
+};
+
+// Test passwords
+const TEST_PASSWORDS: Record<string, string> = {
+  'admin@efika.com.br': 'admin123',
+  'maria@efika.com.br': 'maria123',
+  'suporte@efika.com.br': 'suporte123'
+};
+
 const mapProfileToUser = (profile: Profile): User => ({
   id: profile.user_id,
   email: profile.email,
@@ -28,6 +63,20 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true, error: null });
         
         try {
+          // Check if it's a test user first
+          const testUser = TEST_USERS[credentials.email];
+          if (testUser && TEST_PASSWORDS[credentials.email] === credentials.password) {
+            // Test user login
+            set({ 
+              user: testUser, 
+              isAuthenticated: true, 
+              isLoading: false, 
+              error: null 
+            });
+            return;
+          }
+
+          // Regular Supabase authentication
           const { data, error } = await supabase.auth.signInWithPassword({
             email: credentials.email,
             password: credentials.password,
@@ -88,6 +137,24 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true });
         
         try {
+          // Check for existing test user in localStorage first
+          const persistedState = localStorage.getItem('efika-auth-storage');
+          if (persistedState) {
+            const parsed = JSON.parse(persistedState);
+            if (parsed?.state?.user && parsed?.state?.isAuthenticated) {
+              const testUser = TEST_USERS[parsed.state.user.email];
+              if (testUser) {
+                set({ 
+                  user: testUser, 
+                  isAuthenticated: true, 
+                  isLoading: false 
+                });
+                return;
+              }
+            }
+          }
+
+          // Regular Supabase session check
           const { data: { session } } = await supabase.auth.getSession();
           
           if (session?.user) {

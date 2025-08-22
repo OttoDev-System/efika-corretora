@@ -55,6 +55,11 @@ const LoginPage: React.FC = () => {
         title: 'Login realizado com sucesso!',
         description: 'Redirecionando...',
       });
+      
+      // Small delay to ensure toast is visible before redirect
+      setTimeout(() => {
+        // Redirection will be handled by the useEffect
+      }, 500);
     } catch (error) {
       // Error is handled by the useEffect above
     }
