@@ -1,38 +1,29 @@
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { LoadingButton } from '@/components/common/LoadingButton';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { loginSchema, type LoginFormData } from '@/lib/validations';
+import { Loader2 } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
-  console.log("📄 LoginPage renderizado");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errors, setErrors] = useState<{email?: string; password?: string}>({});
   
   const { login, isLoading, error, clearError, isAuthenticated, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  
-  console.log("🔧 Estados: isLoading:", isLoading, "isAuthenticated:", isAuthenticated, "user:", user);
-  
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema)
-  });
 
-  console.log("📝 Formulário configurado - erros:", errors);
+  console.log("📄 LoginPage renderizado - isLoading:", isLoading, "isAuthenticated:", isAuthenticated);
 
   // Efeito para redirecionar o usuário após o login ser bem-sucedido
   useEffect(() => {
     if (isAuthenticated && user) {
+      console.log("✅ Usuário autenticado, redirecionando...", user.role);
       toast({
         title: 'Login bem-sucedido!',
         description: 'Redirecionando para o seu painel...',
@@ -40,7 +31,7 @@ const LoginPage: React.FC = () => {
 
       const redirectPath = {
         admin: '/admin/dashboard',
-        corretor: '/corretor/pipeline',
+        corretor: '/corretor/pipeline', 
         suporte: '/suporte/tickets'
       }[user.role] || '/';
       
@@ -56,21 +47,42 @@ const LoginPage: React.FC = () => {
         title: 'Erro ao fazer login',
         description: 'Credenciais inválidas. Por favor, tente novamente.',
       });
-      clearError(); // Limpa o erro para não mostrar novamente
+      clearError();
     }
   }, [error, toast, clearError]);
 
+  // Validação simples
+  const validateForm = () => {
+    const newErrors: {email?: string; password?: string} = {};
+    
+    if (!email.trim()) {
+      newErrors.email = 'Email é obrigatório';
+    }
+    
+    if (!password) {
+      newErrors.password = 'Senha é obrigatória';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   // Função chamada ao submeter o formulário
-  const onSubmit = async (data: LoginFormData) => {
-    console.log("🚀 onSubmit chamado com dados:", data);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("🚀 handleSubmit chamado com:", { email, password });
+    
+    if (!validateForm()) {
+      console.log("❌ Validação falhou");
+      return;
+    }
+
     try {
       console.log("📞 Chamando função login...");
-      await login(data);
-      console.log("✅ Login realizado com sucesso");
-      // A lógica de sucesso é tratada pelo useEffect acima
+      await login({ email, password, rememberMe });
+      console.log("✅ Login concluído");
     } catch (err) {
       console.error("❌ Falha no login:", err);
-      // A lógica de erro também é tratada pelo useEffect
     }
   };
 
@@ -93,19 +105,20 @@ const LoginPage: React.FC = () => {
             Acesse sua conta
           </h3>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="email">Email ou CPF</Label>
               <Input
                 id="email"
                 type="text"
                 placeholder="seuemail@exemplo.com"
-                {...register('email')}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className={errors.email ? 'border-destructive' : ''}
               />
               {errors.email && (
                 <p className="text-destructive text-sm mt-1">
-                  {errors.email.message}
+                  {errors.email}
                 </p>
               )}
             </div>
@@ -116,19 +129,24 @@ const LoginPage: React.FC = () => {
                 id="password"
                 type="password"
                 placeholder="Sua senha"
-                {...register('password')}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className={errors.password ? 'border-destructive' : ''}
               />
               {errors.password && (
                 <p className="text-destructive text-sm mt-1">
-                  {errors.password.message}
+                  {errors.password}
                 </p>
               )}
             </div>
 
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                    <Checkbox id="rememberMe" {...register('rememberMe')} />
+                    <Checkbox 
+                      id="rememberMe" 
+                      checked={rememberMe}
+                      onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                    />
                     <Label htmlFor="rememberMe" className="text-sm font-normal">Lembrar-me</Label>
                 </div>
                 <Link to="/auth/forgot-password" className="text-sm text-efika-navy hover:underline">
@@ -136,13 +154,14 @@ const LoginPage: React.FC = () => {
                 </Link>
             </div>
 
-            <LoadingButton
+            <Button
               type="submit"
               className="w-full bg-efika-navy hover:bg-efika-navy-dark text-white"
-              loading={isLoading}
+              disabled={isLoading}
             >
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               ENTRAR
-            </LoadingButton>
+            </Button>
           </form>
         </div>
 
